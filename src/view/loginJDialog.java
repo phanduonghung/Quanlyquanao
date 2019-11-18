@@ -40,7 +40,7 @@ public class loginJDialog extends javax.swing.JDialog {
             if (nhanVien != null) {
                 String matKhau2 = nhanVien.getMatkhau();
                 if (matKhau.equals(matKhau2)) {
-                    ShareHelper.USER = nhanVien;
+//                    ShareHelper.USER = nhanVien;
                     DialogHelper.alert(this, "Đăng nhập thành công!");
                     this.dispose();
                 } else {

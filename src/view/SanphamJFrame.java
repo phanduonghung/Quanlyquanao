@@ -52,7 +52,7 @@ public class SanphamJFrame extends javax.swing.JFrame {
         jTextField5 = new javax.swing.JTextField();
         jButton5 = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jTabbedPane1.setForeground(new java.awt.Color(0, 102, 102));
         jTabbedPane1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
