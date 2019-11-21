@@ -54,7 +54,7 @@ public class ChaoJDialog extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        lblLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/chao.jpg"))); // NOI18N
+        lblLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/chao2.jpg"))); // NOI18N
         getContentPane().add(lblLogo, java.awt.BorderLayout.CENTER);
 
         progressBar.setString("50%");

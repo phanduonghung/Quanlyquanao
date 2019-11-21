@@ -19,22 +19,24 @@ import model.SanPham;
 
      public class SanPhamDAO{
                  public void insert(SanPham model){   
-           String sql="INSERT INTO SanPham (masp, tensp, size, dongia, ngaynhapkho) VALUES ( ?, ?, ?, ?, ?)";      
+           String sql="INSERT INTO SanPham (masp, tensp, size, dongia, ngaynhapkho, hinh) VALUES ( ?, ?, ?, ?, ?, ?)";      
                      JdbcHelper.executeUpdate(sql,             
                    model.getMasp(),               
                    model.getTensp(),               
                    model.getSize(), 
                    model.getDongia(),
-                   model.getNgaynhapkho());                             
+                   model.getNgaynhapkho(),
+                     model.getHinh());
        }      
        public void update(SanPham model){   
-           String sql="UPDATE SanPham SET tensp=?, size=?, dongia=? ngaynhapkho=?  WHERE masp=?";  
+           String sql="UPDATE SanPham SET tensp=?, size=?, dongia=?, ngaynhapkho=?, hinh=? WHERE masp=?";  
            JdbcHelper.executeUpdate(sql,                                       
                    model.getTensp(),               
                    model.getSize(), 
                    model.getDongia(),
                    model.getNgaynhapkho(),
-                    model.getMasp());
+                    model.getMasp(),
+                    model.getHinh());
                }               
         public void delete(String masp){ 
              String sql="DELETE FROM SanPham WHERE masp=?"; 
@@ -68,6 +70,10 @@ import model.SanPham;
         }
         return list;
     }
+     public List<SanPham> selectByKeyword(String keyword){
+ String sql="SELECT * FROM SanPham WHERE tensp LIKE ?";
+ return select(sql, "%"+keyword+"%");
+ }
      private SanPham readFromResultSet(ResultSet rs)
         throws SQLException{    
               SanPham model=new SanPham();      
@@ -76,7 +82,7 @@ import model.SanPham;
              model.setSize(rs.getString("size"));   
               model.setDongia(rs.getString("dongia")); 
               model.setNgaynhapkho(rs.getDate("ngaynhapkho"));
-              
+              model.setHinh(rs.getString("hinh"));
         return model;  
 } 
 }

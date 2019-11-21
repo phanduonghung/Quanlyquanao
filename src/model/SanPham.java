@@ -17,16 +17,18 @@ public class SanPham {
     public String size;
     public String dongia;
     public Date ngaynhapkho;
+    public String hinh;
 
     public SanPham() {
     }
 
-    public SanPham(String masp, String tensp, String size, String dongia, Date ngaynhapkho) {
+    public SanPham(String masp, String tensp, String size, String dongia, Date ngaynhapkho, String hinh) {
         this.masp = masp;
         this.tensp = tensp;
         this.size = size;
         this.dongia = dongia;
         this.ngaynhapkho = ngaynhapkho;
+        this.hinh = hinh;
     }
 
     public String getMasp() {
@@ -68,5 +70,15 @@ public class SanPham {
     public void setNgaynhapkho(Date ngaynhapkho) {
         this.ngaynhapkho = ngaynhapkho;
     }
+
+    public String getHinh() {
+        return hinh;
+    }
+
+    public void setHinh(String hinh) {
+        this.hinh = hinh;
+    }
+
+    
     
 }

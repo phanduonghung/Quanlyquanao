@@ -29,7 +29,7 @@ public class NhanVienDAO {
                    model.getSdt());
        }      
        public void update(NhanVien model){   
-           String sql="UPDATE NhanVien SET matkhau=?, tennv=?, ngaysinh=? luong=? gioitinh=? sdt=? WHERE manv=?";  
+           String sql="UPDATE NhanVien SET matkhau=?, tennv=?, ngaysinh=?, luong=?, gioitinh=?, sdt=? WHERE manv=?";  
            JdbcHelper.executeUpdate(sql,                          
                    model.getMatkhau(),           
                    model.getTennv(), 
@@ -56,21 +56,24 @@ public class NhanVienDAO {
     private List<NhanVien> select(String sql, Object... args) {
         List<NhanVien> list = new ArrayList<>();
 
-        ResultSet rs ;
+        ResultSet rs = null ;
         try {
             rs = JdbcHelper.executeQuery(sql, args);
             while (rs.next()) {
                 NhanVien model = readFromResultSet(rs);
                 list.add(model);
             }
-
             rs.close();
-
+        
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
         return list;
     }
+    public List<NhanVien> selectByKeyword(String keyword){
+ String sql="SELECT * FROM NhanVien WHERE tennv LIKE ?";
+ return select(sql, "%"+keyword+"%");
+ }
      private NhanVien readFromResultSet(ResultSet rs)
         throws SQLException{    
               NhanVien model=new NhanVien();      

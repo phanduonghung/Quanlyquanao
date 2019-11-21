@@ -30,7 +30,7 @@ import model.KhachHang;
                    model.getGhichu());
        }      
        public void update(KhachHang model){   
-           String sql="UPDATE KhachHang SET tenkh=?, gioitinh=?, ngaydk=? diachi=? sdt=? ghichu=? WHERE makh=?";  
+           String sql="UPDATE KhachHang SET tenkh=?, gioitinh=?, ngaydk=?, diachi=?, sdt=?, ghichu=? WHERE makh=?";  
            JdbcHelper.executeUpdate(sql,                          
                                  
                    model.getTenkh(),               
@@ -73,6 +73,10 @@ import model.KhachHang;
         }
         return list;
     }
+     public List<KhachHang> selectByKeyword(String keyword){
+ String sql="SELECT * FROM KhachHang WHERE tenkh LIKE ?";
+ return select(sql, "%"+keyword+"%");
+ }
      private KhachHang readFromResultSet(ResultSet rs)
         throws SQLException{    
               KhachHang model=new KhachHang();      

@@ -157,20 +157,28 @@ public class MainJFrame extends javax.swing.JFrame {
         jMenuItem7.setText("jMenuItem7");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setBackground(new java.awt.Color(255, 204, 255));
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/topmen.jpg"))); // NOI18N
+        jLabel1.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
         lbltime.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         lbltime.setForeground(new java.awt.Color(0, 102, 51));
         lbltime.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Alarm.png"))); // NOI18N
+        lbltime.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
+        lblthu.setBackground(new java.awt.Color(204, 204, 255));
+        lblthu.setFont(new java.awt.Font("Tahoma", 3, 14)); // NOI18N
         lblthu.setForeground(new java.awt.Color(51, 51, 255));
+        lblthu.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
+        jToolBar1.setBackground(new java.awt.Color(204, 204, 255));
         jToolBar1.setRollover(true);
 
         btndangxuat.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         btndangxuat.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Closed door.png"))); // NOI18N
         btndangxuat.setText("Đăng xuất");
+        btndangxuat.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         btndangxuat.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btndangxuatActionPerformed(evt);
@@ -181,6 +189,7 @@ public class MainJFrame extends javax.swing.JFrame {
         btnquanli.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         btnquanli.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Conference.png"))); // NOI18N
         btnquanli.setText("Quản lý nhân viên");
+        btnquanli.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         btnquanli.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnquanliActionPerformed(evt);
@@ -191,17 +200,21 @@ public class MainJFrame extends javax.swing.JFrame {
         btndoanhthu.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         btndoanhthu.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Dollar.png"))); // NOI18N
         btndoanhthu.setText("Doanh thu");
+        btndoanhthu.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jToolBar1.add(btndoanhthu);
 
         btnketthuc.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         btnketthuc.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Anchor.png"))); // NOI18N
         btnketthuc.setText("Kết thúc");
+        btnketthuc.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         btnketthuc.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnketthucActionPerformed(evt);
             }
         });
         jToolBar1.add(btnketthuc);
+
+        jMenuBar1.setBackground(new java.awt.Color(255, 204, 204));
 
         jMenu1.setText("Hệ Thống");
 
@@ -213,6 +226,11 @@ public class MainJFrame extends javax.swing.JFrame {
         mnudangxuat.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_E, java.awt.event.InputEvent.CTRL_MASK));
         mnudangxuat.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Exit.png"))); // NOI18N
         mnudangxuat.setText("Đăng xuất");
+        mnudangxuat.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnudangxuatActionPerformed(evt);
+            }
+        });
         jMenu1.add(mnudangxuat);
 
         mnuketthuc.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_X, java.awt.event.InputEvent.CTRL_MASK));
@@ -273,8 +291,8 @@ public class MainJFrame extends javax.swing.JFrame {
                 .addGap(21, 21, 21)
                 .addComponent(lbltime, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(lblthu, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addComponent(lblthu, javax.swing.GroupLayout.PREFERRED_SIZE, 259, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(26, 26, 26))
             .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addGap(66, 66, 66)
@@ -284,7 +302,7 @@ public class MainJFrame extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE)
+                .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, 49, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 343, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -325,6 +343,11 @@ public class MainJFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
          new NhanvienJFrame().setVisible(true);
     }//GEN-LAST:event_btnquanliActionPerformed
+
+    private void mnudangxuatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnudangxuatActionPerformed
+        // TODO add your handling code here:
+        this.openLogin();
+    }//GEN-LAST:event_mnudangxuatActionPerformed
          
     /**
      * @param args the command line arguments

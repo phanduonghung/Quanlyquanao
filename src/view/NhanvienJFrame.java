@@ -40,7 +40,7 @@ int index = 0; // vị trí của nhân viên đang hiển thị trên form
         model.setRowCount(0);
         try {
             String keyword = txttimkiem.getText(); 
-            List<NhanVien> list = dao.select();
+            List<NhanVien> list = dao.selectByKeyword(keyword); 
             for (NhanVien nv : list) {
                 Object[] row = {
                     nv.getManv(),
@@ -76,11 +76,10 @@ int index = 0; // vị trí của nhân viên đang hiển thị trên form
 
     void update() {
         NhanVien model = getModel();
-
-       
-            try {
+        try {
                 dao.update(model);
                 this.load();
+                this.clear();
                 DialogHelper.alert(this, "Cập nhật thành công!");
             } catch (Exception e) {
                 e.printStackTrace();
@@ -120,7 +119,7 @@ int index = 0; // vị trí của nhân viên đang hiển thị trên form
          this.setModel(new NhanVien());
         this.setStatus(true);
          NhanVien model = new NhanVien(); 
-//        model.setManv(ShareHelper.USER.getManv()); 
+//        model.setTennv(ShareHelper.USER.getManv()); 
         model.setNgaysinh(DateHelper.now()); 
         this.setModel(model);
     }
@@ -441,17 +440,18 @@ int index = 0; // vị trí của nhân viên đang hiển thị trên form
                 .addComponent(tabs)
                 .addContainerGap())
             .addGroup(layout.createSequentialGroup()
-                .addGap(202, 202, 202)
+                .addGap(212, 212, 212)
                 .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 38, Short.MAX_VALUE)
+                .addGap(23, 23, 23)
                 .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(tabs, javax.swing.GroupLayout.PREFERRED_SIZE, 412, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
+                .addComponent(tabs, javax.swing.GroupLayout.PREFERRED_SIZE, 412, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         pack();

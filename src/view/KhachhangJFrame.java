@@ -35,7 +35,7 @@ int index = 0; // vị trí của nhân viên đang hiển thị trên form
         model.setRowCount(0);
         try {
             String keyword = txttimkiem.getText(); 
-            List<KhachHang> list = dao.select();
+             List<KhachHang> list = dao.selectByKeyword(keyword);
             for (KhachHang kh : list) {
                 Object[] row = {
                     kh.getMakh(),
@@ -86,9 +86,9 @@ int index = 0; // vị trí của nhân viên đang hiển thị trên form
 
     void delete() {
         if (DialogHelper.confirm(this, "Bạn thực sự muốn xóa nhân viên này?")) {
-            String manv = txtmakh.getText();
+            String makh = txtmakh.getText();
             try {
-                dao.delete(manv);
+                dao.delete(makh);
                 this.load();
                 this.clear();
                 DialogHelper.alert(this, "Xóa thành công!");
@@ -236,6 +236,11 @@ int index = 0; // vị trí của nhân viên đang hiển thị trên form
         btntimkiem.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         btntimkiem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Edit.png"))); // NOI18N
         btntimkiem.setText("Tìm Kiếm ");
+        btntimkiem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btntimkiemActionPerformed(evt);
+            }
+        });
 
         tbkhachhang.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -559,6 +564,12 @@ this.edit();
          this.index = tbkhachhang .getRowCount() - 1; 
 this.edit(); 
     }//GEN-LAST:event_btnLastActionPerformed
+
+    private void btntimkiemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btntimkiemActionPerformed
+        // TODO add your handling code here:
+        this.load();
+        this.clear();
+    }//GEN-LAST:event_btntimkiemActionPerformed
 
     /**
      * @param args the command line arguments

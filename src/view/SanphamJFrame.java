@@ -7,9 +7,13 @@ package view;
 
 import Helper.DateHelper;
 import Helper.DialogHelper;
+import Helper.ShareHelper;
 import dao.SanPhamDAO;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import javafx.stage.FileChooser;
+import javax.swing.JFileChooser;
 import javax.swing.table.DefaultTableModel;
 import model.SanPham;
 
@@ -18,20 +22,21 @@ import model.SanPham;
  * @author DELL
  */
 public class SanphamJFrame extends javax.swing.JFrame {
-    SanPham sp = new SanPham();
-            List<SanPham> listEM = new ArrayList<>();
+     SanPhamDAO dao = new SanPhamDAO();
     /**
      * Creates new form SanphamJFrame
      */
     public SanphamJFrame() {
         initComponents();
+        fileChooser = new JFileChooser();
         init();
     }
  
 int index = 0; // vị trí của nhân viên đang hiển thị trên form 
-    SanPhamDAO dao = new SanPhamDAO();
+    
 
     void init() {
+        setIconImage(ShareHelper.APP_ICON);
         setLocationRelativeTo(null);
     }
 
@@ -40,15 +45,15 @@ int index = 0; // vị trí của nhân viên đang hiển thị trên form
         model.setRowCount(0);
         try {
             String keyword = txttinkiem.getText(); 
-            List<SanPham> list = dao.select();
+            List<SanPham> list = dao.selectByKeyword(keyword);
             for (SanPham sp : list) {
                 Object[] row = {
                     sp.getMasp(),
                     sp.getTensp(),
                     sp.getSize(),
                     sp.getDongia(),
-                    DateHelper.toString(sp.getNgaynhapkho())};                   
-                
+                    DateHelper.toString(sp.getNgaynhapkho()),                   
+                sp.getHinh()};
                 model.addRow(row);
             }
         } catch (Exception e) {
@@ -89,9 +94,9 @@ int index = 0; // vị trí của nhân viên đang hiển thị trên form
 
     void delete() {
         if (DialogHelper.confirm(this, "Bạn thực sự muốn xóa nhân viên này?")) {
-            String manv = txtmasp.getText();
+            String masp = txtmasp.getText();
             try {
-                dao.delete(manv);
+                dao.delete(masp);
                 this.load();
                 this.clear();
                 DialogHelper.alert(this, "Xóa thành công!");
@@ -103,8 +108,8 @@ int index = 0; // vị trí của nhân viên đang hiển thị trên form
 
     void edit() {
         try {
-            String manv = (String) tbquanlisp.getValueAt(this.index, 0);
-            SanPham model = dao.findById(manv);
+            String masp = (String) tbquanlisp.getValueAt(this.index, 0);
+            SanPham model = dao.findById(masp);
             if (model != null) {
                 this.setModel(model);
                 this.setStatus(false);
@@ -118,7 +123,7 @@ int index = 0; // vị trí của nhân viên đang hiển thị trên form
          this.setModel(new SanPham());
         this.setStatus(true);
          SanPham model = new SanPham(); 
-//        model.setManv(ShareHelper.USER.getManv()); 
+//        model.setMasp(ShareHelper.USER.getManv()); 
         model.setNgaynhapkho(DateHelper.now()); 
         this.setModel(model);
     }
@@ -129,7 +134,10 @@ int index = 0; // vị trí của nhân viên đang hiển thị trên form
          txtsize.setText(model.getSize());
           txtdongia.setText(model.getDongia());
          txtngaynhapkho.setText(DateHelper.toString(model.getNgaynhapkho()));
-      
+       lbllogo.setToolTipText(model.getHinh()); 
+        if(model.getHinh() != null){ 
+            lbllogo.setIcon(ShareHelper.readLogo(model.getHinh())); 
+        }
     }
 
     SanPham getModel() {
@@ -138,9 +146,8 @@ int index = 0; // vị trí của nhân viên đang hiển thị trên form
         model.setTensp(txttensp.getText());
         model.setSize(txtsize.getText());
         model.setDongia(txtdongia.getText());
-        model.setNgaynhapkho(DateHelper.toDate(txtngaynhapkho.getText()));
-        
-        
+        model.setNgaynhapkho(DateHelper.toDate(txtngaynhapkho.getText()));        
+         model.setHinh(lbllogo.getToolTipText());
         return model;
     }
 
@@ -156,6 +163,16 @@ int index = 0; // vị trí của nhân viên đang hiển thị trên form
         btnPrev.setEnabled(!insertable && first);
         btnNext.setEnabled(!insertable && last);
         btnLast.setEnabled(!insertable && last);
+    }
+     void selectImage() { 
+        if(fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION){ 
+               File file = fileChooser.getSelectedFile(); 
+            if(ShareHelper.saveLogo(file)){ 
+                // Hiển thị hình lên form 
+                lbllogo.setIcon(ShareHelper.readLogo(file.getName())); 
+                lbllogo.setToolTipText(file.getName()); 
+            } 
+        } 
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -194,6 +211,8 @@ int index = 0; // vị trí của nhân viên đang hiển thị trên form
         jPanel4 = new javax.swing.JPanel();
         txttinkiem = new javax.swing.JTextField();
         btntinkiem = new javax.swing.JButton();
+        jPanel5 = new javax.swing.JPanel();
+        lbllogo = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -284,12 +303,32 @@ int index = 0; // vị trí của nhân viên đang hiển thị trên form
         );
 
         btnFirst.setText("|<");
+        btnFirst.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFirstActionPerformed(evt);
+            }
+        });
 
         btnPrev.setText("<<");
+        btnPrev.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPrevActionPerformed(evt);
+            }
+        });
 
         btnNext.setText(">>");
+        btnNext.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNextActionPerformed(evt);
+            }
+        });
 
         btnLast.setText(">|");
+        btnLast.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLastActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -327,8 +366,8 @@ int index = 0; // vị trí của nhân viên đang hiển thị trên form
                         .addComponent(btnNext)))
                 .addGap(25, 25, 25)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnLast)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnLast))
                 .addContainerGap(51, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -371,28 +410,28 @@ int index = 0; // vị trí của nhân viên đang hiển thị trên form
 
         tabs.addTab("Sản Phẩm", jPanel1);
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Tahoma", 3, 24)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(204, 0, 0));
         jLabel1.setText("Sản Phẩm");
 
         tbquanlisp.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
             },
             new String [] {
-                "Masp", "Tên sản  phẩm", "Size", "Đơn giá", "Ngày nhập kho"
+                "Masp", "Tên sản  phẩm", "Size", "Đơn giá", "Ngày nhập kho", "Hinh"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
+                false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -429,20 +468,56 @@ int index = 0; // vị trí của nhân viên đang hiển thị trên form
         btntinkiem.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         btntinkiem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Edit.png"))); // NOI18N
         btntinkiem.setText("Tìm Kiếm ");
+        btntinkiem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btntinkiemActionPerformed(evt);
+            }
+        });
+
+        jPanel5.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED));
+
+        lbllogo.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lbllogoMouseClicked(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lbllogo, javax.swing.GroupLayout.DEFAULT_SIZE, 188, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lbllogo, javax.swing.GroupLayout.DEFAULT_SIZE, 123, Short.MAX_VALUE)
+                .addContainerGap())
+        );
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 578, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane1))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(33, 33, 33)
+                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btntinkiem)
+                        .addGap(0, 28, Short.MAX_VALUE)))
                 .addContainerGap())
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(33, 33, 33)
-                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(btntinkiem)
+                .addGap(200, 200, 200)
+                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -455,9 +530,11 @@ int index = 0; // vị trí của nhân viên đang hiển thị trên form
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(19, 19, 19)
                         .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(27, 27, 27)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(64, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(22, 22, 22))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -465,25 +542,26 @@ int index = 0; // vị trí của nhân viên đang hiển thị trên form
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(233, 233, 233)
-                .addComponent(jLabel1)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(tabs)
                 .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGap(385, 385, 385)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(16, Short.MAX_VALUE)
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tabs, javax.swing.GroupLayout.PREFERRED_SIZE, 427, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(tabs, javax.swing.GroupLayout.PREFERRED_SIZE, 427, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
         );
 
         pack();
@@ -529,6 +607,41 @@ int index = 0; // vị trí của nhân viên đang hiển thị trên form
             }
         }
     }//GEN-LAST:event_tbquanlispMouseClicked
+
+    private void lbllogoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbllogoMouseClicked
+        // TODO add your handling code here:
+        this.selectImage();
+    }//GEN-LAST:event_lbllogoMouseClicked
+
+    private void btntinkiemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btntinkiemActionPerformed
+        // TODO add your handling code here:
+         this.load();
+        this.clear(); 
+    }//GEN-LAST:event_btntinkiemActionPerformed
+
+    private void btnFirstActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFirstActionPerformed
+        // TODO add your handling code here:
+         this.index = 0; 
+this.edit();
+    }//GEN-LAST:event_btnFirstActionPerformed
+
+    private void btnPrevActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrevActionPerformed
+        // TODO add your handling code here:
+         this.index--; 
+this.edit(); 
+    }//GEN-LAST:event_btnPrevActionPerformed
+
+    private void btnNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNextActionPerformed
+        // TODO add your handling code here:
+         this.index++; 
+this.edit(); 
+    }//GEN-LAST:event_btnNextActionPerformed
+
+    private void btnLastActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLastActionPerformed
+        // TODO add your handling code here:
+         this.index = tbquanlisp.getRowCount() - 1; 
+this.edit();
+    }//GEN-LAST:event_btnLastActionPerformed
 
     /**
      * @param args the command line arguments
@@ -585,7 +698,9 @@ int index = 0; // vị trí của nhân viên đang hiển thị trên form
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lbllogo;
     private javax.swing.JTabbedPane tabs;
     private javax.swing.JTable tbquanlisp;
     private javax.swing.JTextField txtdongia;
@@ -595,4 +710,5 @@ int index = 0; // vị trí của nhân viên đang hiển thị trên form
     private javax.swing.JTextField txttensp;
     private javax.swing.JTextField txttinkiem;
     // End of variables declaration//GEN-END:variables
+private javax.swing.JFileChooser fileChooser;
 }
